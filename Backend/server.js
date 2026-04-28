@@ -15,7 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 const client = new MongoClient(
-  process.env.MONGO_URI || "mongodb://127.0.0.1:27017"
+  process.env.MONGO_URI
 );
 const TEST_MODE = process.env.TEST_MODE || "mongo";
 
