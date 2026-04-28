@@ -228,43 +228,38 @@ app.get("/api/chat-users", async (req, res) => {
 /* ================= REGISTER ================= */
 
 app.post("/api/register", async (req, res) => {
-  const { name, email, password } = req.body;
+  try {
+    console.log("REGISTER BODY:", req.body);
 
-  const hashed = await bcrypt.hash(password, SALT_ROUNDS);
-  const createdAt = new Date();
+    const { name, email, password } = req.body;
 
-  if (TEST_MODE === "sqlite") {
-    const start = Date.now();
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: "Missing fields" });
+    }
 
-    db.run(
-      `
-      INSERT INTO users 
-      (name, email, password, role, createdAt)
-      VALUES (?, ?, ?, ?, ?)
-      `,
-      [name, email, hashed, "user", createdAt.toISOString()],
-      function (err) {
-        if (err) return res.status(500).json({ error: "SQLite failed" });
+    const existing = await usersCollection.findOne({ email });
 
-        console.log("🟦 SQLite register:", Date.now() - start, "ms");
-        res.json({ message: "Registered (SQLite)" });
-      }
-    );
-  }
+    if (existing) {
+      return res.status(400).json({ error: "User already exists" });
+    }
 
-  if (TEST_MODE === "mongo") {
-    const start = Date.now();
+    const hashed = await bcrypt.hash(password, SALT_ROUNDS);
 
-    await usersCollection.insertOne({
+    const result = await usersCollection.insertOne({
       name,
       email,
       password: hashed,
       role: "user",
-      createdAt,
+      createdAt: new Date(),
     });
 
-    console.log("🟩 Mongo register:", Date.now() - start, "ms");
+    console.log("INSERT RESULT:", result);
+
     res.json({ message: "Registered (Mongo)" });
+
+  } catch (err) {
+    console.error("❌ REGISTER ERROR:", err); // 🔥 THIS IS KEY
+    res.status(500).json({ error: "Server error" });
   }
 });
 
