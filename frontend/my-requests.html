@@ -19,7 +19,7 @@ if (!user) {
 
 async function loadRequests() {
   const res = await fetch(
-    `http://localhost:3000/api/my-requests?email=${user.email}`
+   `${window.location.origin}/api/my-requests?email=${user.email}`
   );
 
   const data = await res.json();

@@ -1069,7 +1069,7 @@ function loadServices(userLat, userLng) {
   const endTime = performance.now();
 const executionTimeMs = endTime - startTime;
 
-fetch("http://localhost:3000/api/search-log", {
+fetch(`${window.location.origin}/api/search-log`, {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({

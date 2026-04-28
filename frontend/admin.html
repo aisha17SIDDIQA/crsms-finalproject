@@ -197,10 +197,10 @@ body {
 
 </div>
 
-<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 
 <script>
-const socket = io("http://localhost:3000");
+const socket = io();
 
 const replyInput = document.getElementById("replyInput");
 
@@ -238,7 +238,7 @@ let currentUser = null;
 
 
 async function loadChatUsers() {
-  const res = await fetch("http://localhost:3000/api/chat-users");
+  const res = await fetch(`${window.location.origin}/api/chat-users`);
   const data = await res.json();
 
   const list = document.getElementById("userList");
@@ -251,7 +251,7 @@ async function loadChatUsers() {
 }
 
 async function loadRequests() {
-  const res = await fetch("http://localhost:3000/api/admin/requests");
+  const res = await fetch(`${window.location.origin}/api/admin/requests`);
   const data = await res.json();
 
   const list = document.getElementById("userList");
@@ -286,7 +286,7 @@ function openChat(email) {
 
   socket.emit("join", email);
 
-  fetch(`http://localhost:3000/api/chat?email=${email}`)
+  fetch(`${window.location.origin}/api/chat?email=${user.email}`)
     .then(res => res.json())
     .then(messages => {
       const chat = document.getElementById("chatBox");

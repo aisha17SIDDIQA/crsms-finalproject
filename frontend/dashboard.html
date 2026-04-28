@@ -141,7 +141,7 @@ body {
 
 </div>
 
-<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 
 <script>
 const user = JSON.parse(localStorage.getItem("user"));
@@ -152,7 +152,7 @@ if (!user) {
 
 document.getElementById("welcome").innerText = "Welcome " + user.name;
 
-const socket = io("http://localhost:3000");
+const socket = io();
 
 const input = document.getElementById("msgInput");
 
@@ -176,7 +176,7 @@ socket.emit("join", user.email);
 
 async function loadChat() {
   const res = await fetch(
-  `http://localhost:3000/api/chat?email=${user.email}`
+  fetch(`${window.location.origin}/api/chat?email=${user.email}`)
 );
 
   const data = await res.json();

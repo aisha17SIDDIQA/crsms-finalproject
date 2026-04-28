@@ -369,7 +369,7 @@ document.getElementById("requestForm").addEventListener("submit", async (e) => {
   // 🔥 CHECK IF USER IS LOGGED IN
   const user = JSON.parse(localStorage.getItem("user"));
 
-  const res = await fetch("http://localhost:3000/api/requests", {
+  const res = await fetch(`${window.location.origin}/api/requests`, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({
