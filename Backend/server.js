@@ -435,6 +435,42 @@ app.post("/api/test-chat", async (req, res) => {
   }
 });
 
+app.post("/api/test-typing", async (req, res) => {
+  const { email, sender, event } = req.body;
+  const createdAt = new Date();
+
+  if (TEST_MODE === "sqlite") {
+    const start = Date.now();
+
+    db.run(
+      `INSERT INTO typing_logs (email, sender, event, createdAt)
+       VALUES (?, ?, ?, ?)`,
+      [email, sender, event, createdAt.toISOString()],
+      function () {
+        const time = Date.now() - start;
+        console.log("🟦 SQLite typing test:", time, "ms");
+        res.json({ time });
+      }
+    );
+  }
+
+  if (TEST_MODE === "mongo") {
+    const start = Date.now();
+
+    await client.db("crsms").collection("typing_logs").insertOne({
+      email,
+      sender,
+      event,
+      createdAt,
+    });
+
+    const time = Date.now() - start;
+    console.log("🟩 Mongo typing test:", time, "ms");
+
+    res.json({ time });
+  }
+});
+
 /* ================= SOCKET.IO ================= */
 
 io.on("connection", (socket) => {
