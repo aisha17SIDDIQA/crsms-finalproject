@@ -229,7 +229,6 @@ app.get("/api/chat-users", async (req, res) => {
 
 app.post("/api/register", async (req, res) => { 
   try {
-    console.log("REGISTER BODY:", req.body);
 
     const { name, email, password } = req.body;
 
@@ -260,9 +259,6 @@ app.post("/api/register", async (req, res) => {
 
     // ✅ CLEAN LOG FOR ANALYSIS
     console.log(`DB_TEST,MONGO,REGISTER,${time}`);
-
-    // (optional debug)
-    console.log("INSERT RESULT:", result);
 
     res.json({ message: "Registered (Mongo)" });
 
